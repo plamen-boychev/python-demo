@@ -1,6 +1,7 @@
 import unittest
 import json
 import response
+import requests
 
 class TestResponse(unittest.TestCase):
 
@@ -8,7 +9,7 @@ class TestResponse(unittest.TestCase):
         """Test correct behavior on no parameters provided in constructor."""
         response_object = response.Response()
         self.assertEqual(response_object.status_code, None, "Status code should be None!")
-        self.assertEqual(response_object.headers, {}, "Headers should be an empty dictionary!")
+        self.assertEqual(response_object.headers, None, "Headers should be None!")
         self.assertEqual(response_object.payload, None, "Payload should be None!")
 
     def test_parameters_checks(self):

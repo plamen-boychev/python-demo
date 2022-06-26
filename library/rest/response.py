@@ -1,4 +1,5 @@
 import json
+import requests
 
 class Response:
     """Provides an abstraction of a REST API response object."""
@@ -9,7 +10,7 @@ class Response:
     payload_parsed = None
     json = None
 
-    def __init__(self, status_code=None, headers={}, payload=None, parse_payload=True):
+    def __init__(self, status_code=None, headers=None, payload=None, parse_payload=False):
         """Initializing a response object.
         Can optionally provide the details for status code, headers and payload."""
         if status_code:
@@ -31,7 +32,7 @@ class Response:
 
     def set_headers(self, headers):
         """Setter for the headers property."""
-        if False == isinstance(headers, dict):
+        if False == isinstance(headers, requests.structures.CaseInsensitiveDict):
             raise Exception("Headers are supported only as a dictionary! {} provided".format(type(headers)))
         self.headers = headers
         return self
