@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, '../rest')
 
 import time  
-from auth import BasicAuth
+from auth import GenericAuth
 from error_handling import ErrorHandler
 from client import Client as BaseClient
 
@@ -40,7 +40,7 @@ class GitHubClient(BaseClient):
         headers = headers if headers else {}
         headers["Accept"] = "application/vnd.github.v3+json"
         # TODO: Verify credentials are valid
-        auth = auth if auth else BasicAuth(credentials, "token")
+        auth = auth if auth else GenericAuth(credentials, "token")
         error_handler = error_handler if error_handler else GitHubErrorHandler()
         super().__init__(base_path, headers, auth, error_handler)
 
