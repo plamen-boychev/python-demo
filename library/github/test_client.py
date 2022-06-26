@@ -26,16 +26,13 @@ class TestClient(TestCase):
         client_obj = githubclient.GitHubClient(credentials=creds)
         response = client_obj.get("test")
 
-        print("response obj in tests: ", response)
-        print("response obj in tests: ", response.status_code)
-
         self.assertEqual(response.status_code, 200, "Mocked response should return expected status code!")
         self.assertEqual(response.headers['content-type'], 'application/json', "Mocked response should return expected content type header!")
         self.assertEqual(response.get_json(True)['pong'], True, 'Mocked response should return expected "pong" property value!')
 
     @mock.patch("request.requests.request")
-    def test_ok_request(self, mock_post):
-        """Test successful requests."""
+    def test_bad_request(self, mock_post):
+        """Test rate limit retry mechanism."""
 
         my_mock_response = mock.Mock(status_code=403)
         my_mock_response.content = json.dumps({ "pong": True }).encode('ascii')
@@ -55,3 +52,27 @@ class TestClient(TestCase):
         since we're always providing 0 as remaining calls.
         """
         self.assertRaises(Exception, client_obj.get, "test")
+
+    @mock.patch("request.requests.request")
+    def test_fetching_user_details(self, mock_post):
+        """Test fetching user details by username."""
+
+        my_mock_response = mock.Mock(status_code=200)
+        my_mock_response.content = json.dumps({ "login": "testuser" }).encode('ascii')
+        my_mock_response.headers = requests.structures.CaseInsensitiveDict()
+        my_mock_response.headers['Content-Type'] = 'application/json'
+        mock_post.return_value = my_mock_response
+
+        creds = {
+            "user": "myuser",
+            "password": "mypass",
+        }
+        client_obj = githubclient.GitHubClient(credentials=creds)
+        response = client_obj.fet_user_details("testuser")
+        """
+        We're expecting the request to fail after a number of attempts
+        since we're always providing 0 as remaining calls.
+        """
+        self.assertEqual(response.status_code, 200, "Fetching user details should return success status code!")
+        self.assertEqual(response.headers["content-type"], "application/json", "Mocked response should return expected content type header!")
+        self.assertEqual(response.get_json(True)["login"], "testuser", 'Mocked response should return expected "login" property value!')
