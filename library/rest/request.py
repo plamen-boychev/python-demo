@@ -22,7 +22,7 @@ class Request:
     payload = None
     method = None
     path = None
-    
+
     def __init__(self, method=None, path=None, payload=None, headers={}):
         """Initializing a request object.
         Can optionally provide the details for path, headers, method and payload."""
