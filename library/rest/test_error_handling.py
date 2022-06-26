@@ -7,7 +7,7 @@ import error_handling
 class ErrorRaiser(error_handling.ErrorHandler):
     """Extends the abstract error handler. Provides means of testing the integration with the Client class."""
 
-    def handle_error(self, response):
+    def handle_error(self, response, request, client):
         """Raises an exception in case of a non 200 response code."""
         if 200 != response.status_code:
             raise Exception("API error response detected!")
@@ -15,7 +15,7 @@ class ErrorRaiser(error_handling.ErrorHandler):
 class ErrorDampener(error_handling.ErrorHandler):
     """Extends the abstract error handler. Provides means of testing the integration with the Client class."""
 
-    def handle_error(self, response):
+    def handle_error(self, response, request, client):
         """Changes the status code in case of a non 200 response code."""
         if 200 != response.status_code:
             response.set_status_code(200)
