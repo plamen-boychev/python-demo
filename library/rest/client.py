@@ -1,5 +1,6 @@
 import request
 import auth
+import error_handling
 
 class Client:
     """A base service client class definition.
@@ -8,15 +9,19 @@ class Client:
     base_path = None
     headers = None
     auth = None
+    error_handler = None
 
-    def __init__(self, base_path, headers=None, auth=None):
+    def __init__(self, base_path, headers=None, auth=None, error_handler=None):
         """Initializing a client."""
         if auth and False == isinstance(auth, auth.Auth):
-            raise Exception("Authorization handler needs to be an instance of auth.Auth class, {} provided instead".format(type(auth)))
+            raise Exception("Authorization handler needs to be an implementation of auth.Auth class, {} provided".format(type(auth)))
+        if error_handler and False == isinstance(error_handler, error_handling.ErrorHandler):
+            raise Exception("Error handler needs to be an implementation of error_handling.ErrorHandler class, {} provided".format(type(auth)))
 
         self.base_path = base_path
         self.headers = headers if headers else None
         self.auth = auth if auth else None
+        self.error_handler = error_handler if error_handler else None
 
     def get(self, path, headers=None):
         """Execute GET requests."""
@@ -48,4 +53,5 @@ class Client:
         req = self.build_request(path, request.HTTPVerb.delete, headers=headers);
         if self.auth:
             self.auth.decorate_request(req)
-        return req.invoke_request()
+        resp = req.invoke_request()
+        return resp if not self.error_handler else self.error_handler.handle_error(resp)
