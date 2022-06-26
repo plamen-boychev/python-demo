@@ -17,6 +17,8 @@ class GitHubErrorHandler(ErrorHandler):
     # TODO: Avoid:
     #       - Passing the client as a parameter
     #       - Recusrion - possible stack overflow
+    #       - Create a reusable rate limit mechanism for both GitHub and Freshdesk clients -
+    #         the only difference is in the calculation of delay before next attempt
     def handle_error(self, response, request, client):
         """Detects an error in the response. If would not raise an exception should return a response object"""
         if response.status_code > 299 and "X-RateLimit-Remaining" in response.headers and "X-RateLimit-Reset" in response.headers and 0 == response.headers["X-RateLimit-Remaining"]:
