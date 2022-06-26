@@ -16,6 +16,7 @@ class TestResponse(unittest.TestCase):
         response_object = response.Response()
         self.assertRaises(Exception, response_object.set_status_code, "passing string")
         self.assertRaises(Exception, response_object.set_status_code, -1)
+        self.assertRaises(Exception, response_object.set_headers, None)
 
     def test_parsing_payload(self):
         """Test parsing payload."""
