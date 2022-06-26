@@ -8,8 +8,8 @@ class TestRequest(TestCase):
     def test_empty_constructor(self):
         """Test correct behavior on no parameters provided in constructor."""
 
-        request_object = request.Request()
-        self.assertEqual(request_object.headers, { "Content-Type": "application/json"}, "Headers should be an empty dictionary!")
+        request_object = request.Request(headers={})
+        self.assertEqual(request_object.headers, { "Content-Type": "application/json" }, "Headers should be an empty dictionary!")
         self.assertEqual(request_object.payload, None, "Status code should be None!")
         self.assertEqual(request_object.method, None, "Status code should be None!")
         self.assertEqual(request_object.path, None, "Status code should be None!")
