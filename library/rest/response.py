@@ -31,6 +31,8 @@ class Response:
 
     def set_headers(self, headers):
         """Setter for the headers property."""
+        if False == isinstance(headers, dict):
+            raise Exception("Headers are supported only as a dictionary! {} provided".format(type(headers)))
         self.headers = headers
         return self
 
