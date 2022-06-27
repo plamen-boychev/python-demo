@@ -7,9 +7,9 @@ class Auth(ABC):
     credentials = None
     scheme = None
 
-    def __init__(self, credentials, scheme):
+    def __init__(self, credentials=None, scheme=None):
         """Constructor."""
-        if not credentials:
+        if None == credentials:
             raise Exception("Credentials are required to instanciate an authorizaion instance!")
         if False == isinstance(credentials, dict):
             raise Exception("Credentials should be provided as a dictionary when instanciating an authorizaion instance!")
@@ -23,7 +23,25 @@ class Auth(ABC):
     def decorate_request(request):
         pass
 
-class GenericAuth(Auth):
+class TokenAuth(Auth):
+    """Implements a basic authentication mechanism for consuming REST API services."""
+
+    token = None
+
+    def __init__(self, token, scheme="token"):
+        """Constructor."""
+        super().__init__({}, scheme)
+        if not token:
+            raise Exception('Parameter "token" is required!')
+        self.token = token
+
+    def decorate_request(self, request):
+        """Decorating the headers of a request before executing it - implementing the authorization mechanism."""
+        headers = request.headers if request.headers else {}
+        headers["Authorization"] = "{} {}".format(self.scheme, self.token)
+        return request
+
+class BasicAuth(Auth):
     """Implements a basic authentication mechanism for consuming REST API services."""
 
     def __init__(self, credentials, scheme="Basic"):
@@ -37,13 +55,9 @@ class GenericAuth(Auth):
     def decorate_request(self, request):
         """Decorating the headers of a request before executing it - implementing the authorization mechanism."""
         headers = request.headers if request.headers else {}
-        auth_header = ""
-        if self.scheme:
-            auth_header += "{} ".format(self.scheme)
-        auth_header += b64encode(
-            "{}:{}"
-                .format(self.credentials["user"], self.credentials["password"])
-                .encode("ascii")
+        creds = b64encode("{}:{}"
+            .format(self.credentials["user"], self.credentials["password"])
+            .encode("ascii")
         ).decode("ascii")
-        headers["Authorization"] = auth_header
+        headers["Authorization"] = "{} {}".format(self.scheme, creds)
         return request
