@@ -1,7 +1,7 @@
 import json
 import enum
 import requests
-import response
+from library.rest.response import Response
 
 class HTTPVerb(enum.Enum):
     """Provides a list of supported HTTP verbs"""
@@ -65,7 +65,7 @@ class Request:
     
     def invoke_request(self):
         raw_response = requests.request(self.method.value, self.path, data=self.payload, headers=self.headers, stream=True)
-        return response.Response(
+        return Response(
             status_code=raw_response.status_code,
             headers=raw_response.headers,
             payload=raw_response.content.decode('UTF-8'),
