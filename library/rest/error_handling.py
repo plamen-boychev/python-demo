@@ -1,9 +1,7 @@
-from abc import ABC, abstractmethod
-
-class ErrorHandler(ABC):
+class ErrorHandler():
     """Provides an abstraction for handling errors when consuming REST API services."""
 
-    @abstractmethod
     def handle_error(self, response, request, client):
         """Detects an error in the response. If would not raise an exception should return a response object"""
-        pass
+        if response.status_code >= 400:
+            raise Exception('Request "{} {}" failed!'.format(request.method, request.path))
