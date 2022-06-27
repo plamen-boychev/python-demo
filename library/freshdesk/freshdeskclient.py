@@ -1,13 +1,15 @@
 import time
-from library.rest.auth import BasicAuth
+from library.rest.auth import Auth, BasicAuth
 from library.rest.error_handling import ErrorHandler
 from library.rest.client import Client as BaseClient
+from library.rest.request import Request
+from library.rest.response import Response
 
 class FreshdeskClient(BaseClient):
     """A Freshdesk service client class definition.
     Handles REST API communication."""
 
-    def __init__(self, subdomain=None, api_key=None, headers=None, auth=None, error_handler=None):
+    def __init__(self, subdomain:str=None, api_key:str=None, headers:dict=None, auth:Auth=None, error_handler:ErrorHandler=None):
         """Initializing a client."""
         # TODO: Validate subdomain
         base_path = "https://{}.freshdesk.com/api/v2/contacts".format(subdomain)
@@ -23,7 +25,7 @@ class FreshdeskClient(BaseClient):
         error_handler = error_handler if error_handler else FreshdeskErrorHandler()
         super().__init__(base_path, headers, auth, error_handler)
 
-    def persist_contact(self, user_login, details):
+    def persist_contact(self, user_login:str, details:dict):
         """Enables fetching a user details by its username / login."""
         # TODO: Validate input
         existing_contacts = self.get('/api/v2/search/contacts?query="unique_external_id:{}"'.format(user_login))
@@ -45,7 +47,7 @@ class FreshdeskErrorHandler(ErrorHandler):
     #       - Recusrion - possible stack overflow
     #       - Create a reusable rate limit mechanism for both GitHub and Freshdesk clients -
     #         the only difference is in the calculation of delay before next attempt
-    def handle_error(self, response, request, client):
+    def handle_error(self, response:Response, request:Request, client:BaseClient):
         """Detects an error in the response. If would not raise an exception should return a response object"""
         if response.status_code >= 400:
             if "X-RateLimit-Remaining" in response.headers and "Retry-After" in response.headers and 0 == response.headers["X-RateLimit-Remaining"]:
