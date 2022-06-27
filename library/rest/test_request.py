@@ -1,14 +1,14 @@
 from unittest import TestCase, mock
 import json
-import request
 import requests
+from library.rest.request import HTTPVerb, Request
 
 class TestRequest(TestCase):
 
     def test_empty_constructor(self):
         """Test correct behavior on no parameters provided in constructor."""
 
-        request_object = request.Request(headers={})
+        request_object = Request(headers={})
         self.assertEqual(request_object.headers, { "Content-Type": "application/json" }, "Headers should be an empty dictionary!")
         self.assertEqual(request_object.payload, None, "Status code should be None!")
         self.assertEqual(request_object.method, None, "Status code should be None!")
@@ -17,7 +17,7 @@ class TestRequest(TestCase):
     def test_parameters_checks(self):
         """Test bad parameter values detection."""
 
-        request_object = request.Request()
+        request_object = Request()
         self.assertRaises(Exception, request_object.set_headers, [])
         self.assertRaises(Exception, request_object.set_method, "passing string")
         self.assertRaises(Exception, request_object.set_method, 1)
@@ -28,18 +28,18 @@ class TestRequest(TestCase):
 
         headers = { "Accept": "application:json" }
         payload = { "test": True }
-        method = request.HTTPVerb.post
+        method = HTTPVerb.post
         path = "/api/vN/resourceName"
 
         # Check constructor
-        request_object = request.Request(method, path, payload, headers)
+        request_object = Request(method, path, payload, headers)
         self.assertEqual(request_object.headers, { "Content-Type": "application/json", "Accept": "application:json" }, "Headers should be decorated with content type!")
         self.assertEqual(request_object.payload, payload, "Payload should be available as injected!")
         self.assertEqual(request_object.method, method, "Method should be available as injected!")
         self.assertEqual(request_object.path, path, "Path should be available as injected!")
 
         # Check setters
-        new_request = request.Request()
+        new_request = Request()
         new_request.set_headers(headers)
         new_request.set_payload(payload)
         new_request.set_method(method)
@@ -49,7 +49,7 @@ class TestRequest(TestCase):
         self.assertEqual(new_request.method, method, "Method should be available as injected!")
         self.assertEqual(new_request.path, path, "Path should be available as injected!")
 
-    @mock.patch("request.requests.request")
+    @mock.patch("requests.request")
     def test_invoke_requests(self, mock_post):
         """Test invoking requests."""
 
@@ -94,11 +94,11 @@ class TestRequest(TestCase):
 
         headers = { "Accept": "application/json" }
         payload = { "test": True }
-        method = request.HTTPVerb.get
+        method = HTTPVerb.get
         path = "https://api.github.mock/users/defunkt"
 
         # Check constructor
-        request_object = request.Request(method, path, payload, headers)
+        request_object = Request(method, path, payload, headers)
         response = request_object.invoke_request()
 
         self.assertEqual(response.status_code, 200, "Mocked response should return expected status code!")

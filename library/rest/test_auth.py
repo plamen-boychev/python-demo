@@ -1,6 +1,6 @@
 from unittest import TestCase
-import auth
-import request
+from library.rest.auth import BasicAuth
+from library.rest.request import Request
 
 from base64 import b64decode
 
@@ -15,8 +15,8 @@ class TestAuth(TestCase):
         }
         scheme = "Basic"
 
-        req = request.Request()
-        basic = auth.GenericAuth(creds, scheme)
+        req = Request()
+        basic = BasicAuth(creds, scheme)
         req = basic.decorate_request(req)
         auth_header = req.headers["Authorization"]
         header_extract = b64decode(auth_header.replace("{} ".format(scheme), "")).decode("ascii").split(":")
