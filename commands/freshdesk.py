@@ -10,7 +10,7 @@ class ImportGitHubUserInFreshdesk():
     github_token = None
     freshdesk_token = None
 
-    def __init__(self, github_username: str, freshdesk_subdomain: str, github_token: str, freshdesk_token: str):
+    def __init__(self, github_username:str, freshdesk_subdomain:str, github_token:str, freshdesk_token:str):
         """Constructor."""
         # Validating parameters
         if not github_username:
