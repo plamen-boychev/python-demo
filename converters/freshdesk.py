@@ -5,7 +5,7 @@ class GitHubUserToFreshdeskContact():
         """Constructor."""
         pass
 
-    def convert(self, github_user_details):
+    def convert(self, github_user_details:dict):
         # TODO: Convert details
         # TODO: Take declarative approach rather than imperative if possible, there
         #       might be portions that are dynamic and it might not be feasible.

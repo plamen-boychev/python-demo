@@ -1,5 +1,5 @@
 import json
-import requests
+from requests.structures import CaseInsensitiveDict as CaseDict
 
 class Response:
     """Provides an abstraction of a REST API response object."""
@@ -10,7 +10,7 @@ class Response:
     payload_parsed = None
     json = None
 
-    def __init__(self, status_code=None, headers=None, payload=None, parse_payload=False):
+    def __init__(self, status_code:int=None, headers:CaseDict=None, payload:dict=None, parse_payload:bool=False):
         """Initializing a response object.
         Can optionally provide the details for status code, headers and payload."""
         if status_code:
@@ -20,7 +20,7 @@ class Response:
         if payload:
             self.set_payload(payload, parse_payload)
 
-    def set_status_code(self, status_code):
+    def set_status_code(self, status_code:int):
         """Setter for the status_code property."""
         if False == isinstance(status_code, int):
             raise Exception("Status code should be an integer!")
@@ -30,14 +30,14 @@ class Response:
         self.status_code = status_code
         return self
 
-    def set_headers(self, headers):
+    def set_headers(self, headers:CaseDict):
         """Setter for the headers property."""
-        if False == isinstance(headers, requests.structures.CaseInsensitiveDict):
+        if False == isinstance(headers, CaseDict):
             raise Exception("Headers are supported only as a dictionary! {} provided".format(type(headers)))
         self.headers = headers
         return self
 
-    def set_payload(self, payload, parse=True):
+    def set_payload(self, payload:dict, parse:bool=True):
         """Setter for the payload property.
         Optionally can omit parsingthe payload for specific cases we'd like to do this on demand.
         As an example - if the payload is too large and we'd like to parse it in an async task
@@ -49,7 +49,7 @@ class Response:
             self.json = json.loads(payload)
         return self
 
-    def get_json(self, refresh=False):
+    def get_json(self, refresh:bool=False):
         """Getter for the parsed payload data.
         Supports an argument for refreshing the valu - forcing parsing the payload again.
         Throws a json.decoder.JSONDecodeError in case of invalid JSON payload provided."""
