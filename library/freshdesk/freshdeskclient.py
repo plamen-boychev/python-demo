@@ -47,14 +47,17 @@ class FreshdeskErrorHandler(ErrorHandler):
     #         the only difference is in the calculation of delay before next attempt
     def handle_error(self, response, request, client):
         """Detects an error in the response. If would not raise an exception should return a response object"""
-        if response.status_code > 299 and "X-RateLimit-Remaining" in response.headers and "Retry-After" in response.headers and 0 == response.headers["X-RateLimit-Remaining"]:
-            if self.retries > self.max_retries:
-                raise Exception("Too many unsuccessful attempts to execute the request!")
-            now = int(round(time.time()))
-            retry_after = response.headers["Retry-After"]
-            # TODO: Log details in a proper way - should not be visible when running tests
-            # print("Rate limit exceeded. Will retry in {} seconds".format(retry_after))
-            time.sleep(retry_after)
-            self.retries += 1
-            client.execute_request(request)
+        if response.status_code >= 400:
+            if "X-RateLimit-Remaining" in response.headers and "Retry-After" in response.headers and 0 == response.headers["X-RateLimit-Remaining"]:
+                if self.retries > self.max_retries:
+                    raise Exception("Too many unsuccessful attempts to execute the request!")
+                now = int(round(time.time()))
+                retry_after = response.headers["Retry-After"]
+                # TODO: Log details in a proper way - should not be visible when running tests
+                # print("Rate limit exceeded. Will retry in {} seconds".format(retry_after))
+                time.sleep(retry_after)
+                self.retries += 1
+                client.execute_request(request)
+            else:
+                return ErrorHandler.handle_error(self, response, request, client)
         return response
