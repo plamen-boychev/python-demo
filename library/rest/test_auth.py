@@ -16,7 +16,7 @@ class TestAuth(TestCase):
         scheme = "Basic"
 
         req = request.Request()
-        basic = auth.BasicAuth(creds, scheme)
+        basic = auth.GenericAuth(creds, scheme)
         req = basic.decorate_request(req)
         auth_header = req.headers["Authorization"]
         header_extract = b64decode(auth_header.replace("{} ".format(scheme), "")).decode("ascii").split(":")

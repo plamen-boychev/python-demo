@@ -23,7 +23,7 @@ class Auth(ABC):
     def decorate_request(request):
         pass
 
-class BasicAuth(Auth):
+class GenericAuth(Auth):
     """Implements a basic authentication mechanism for consuming REST API services."""
 
     def __init__(self, credentials, scheme="Basic"):
