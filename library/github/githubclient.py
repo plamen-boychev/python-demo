@@ -46,7 +46,7 @@ class GitHubErrorHandler(ErrorHandler):
                 # print("Rate limit exceeded. Will retry in {} seconds".format(retry_after))
                 time.sleep(retry_after)
                 self.retries += 1
-                client.execute_request(request)
+                return client.execute_request(request)
             else:
                 return ErrorHandler.handle_error(self, response, request, client)
         return response
