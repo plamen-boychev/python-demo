@@ -12,7 +12,7 @@ class HTTPVerb(enum.Enum):
     delete = "DELETE"
 
     @classmethod
-    def is_supported(cls, value):
+    def is_supported(cls, value:str):
         return value.value in cls._value2member_map_
 
 class Request:
@@ -23,7 +23,7 @@ class Request:
     method = None
     path = None
 
-    def __init__(self, method=None, path=None, payload=None, headers={}):
+    def __init__(self, method:HTTPVerb=None, path:str=None, payload:dict=None, headers:dict={}):
         """Initializing a request object.
         Can optionally provide the details for path, headers, method and payload."""
         if None != method:
@@ -35,7 +35,7 @@ class Request:
         if None != headers:
             self.set_headers(headers)
 
-    def set_method(self, method):
+    def set_method(self, method:HTTPVerb):
         """Setter for method property. Validates the method value."""
         if False == isinstance(method, HTTPVerb):
             raise Exception("Method should be a string!")
@@ -44,18 +44,18 @@ class Request:
         self.method = method
         return self
 
-    def set_path(self, path):
+    def set_path(self, path:str):
         if False == isinstance(path, str):
             raise Exception("Value for path should be a string!")
         self.path = path
         return self
 
-    def set_payload(self, payload):
+    def set_payload(self, payload:dict):
         self.payload = payload
         # TODO: Validate payload injection is available for proper verbs only!
         return self
 
-    def set_headers(self, headers):
+    def set_headers(self, headers:dict):
         if False == isinstance(headers, dict):
             raise Exception("Value for headers should be a dictionary!")
         if not "Content-Type" in headers:

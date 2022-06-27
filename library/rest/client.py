@@ -1,6 +1,7 @@
 from library.rest.request import Request, HTTPVerb
 from library.rest.auth import Auth
 from library.rest.error_handling import ErrorHandler
+from library.rest.request import HTTPVerb, Request
 
 class Client:
     """A base service client class definition.
@@ -11,7 +12,7 @@ class Client:
     auth = None
     error_handler = None
 
-    def __init__(self, base_path, headers=None, auth=None, error_handler=None):
+    def __init__(self, base_path:str, headers:dict=None, auth:Auth=None, error_handler:ErrorHandler=None):
         """Initializing a client."""
         if auth and False == isinstance(auth, Auth):
             raise Exception("Authorization handler needs to be an implementation of Auth class, {} provided".format(type(auth)))
@@ -23,38 +24,38 @@ class Client:
         self.auth = auth if auth else None
         self.error_handler = error_handler if error_handler else None
 
-    def get(self, path, headers=None):
+    def get(self, path:str, headers:dict=None):
         """Execute GET requests."""
         return self.handle_request(path, HTTPVerb.get, headers=headers);
 
-    def post(self, path, data, headers=None):
+    def post(self, path:str, data:dict, headers:dict=None):
         """Execute POST requests."""
         return self.handle_request(path, HTTPVerb.post, data=data, headers=headers);
 
-    def put(self, path, data, headers=None):
+    def put(self, path:str, data:dict, headers:dict=None):
         """Execute PUT requests."""
         return self.handle_request(path, HTTPVerb.put, data=data, headers=headers);
 
-    def patch(self, path, data, headers=None):
+    def patch(self, path:str, data:dict, headers:dict=None):
         """Execute PATCH requests."""
         return self.handle_request(path, HTTPVerb.patch, data=data, headers=headers);
 
-    def delete(self, path, headers=None):
+    def delete(self, path:str, headers:dict=None):
         """Execute DELETE requests."""
         return self.handle_request(path, HTTPVerb.delete, headers=headers);
 
-    def build_request(self, path, method, data=None, headers=None):
+    def build_request(self, path:str, method, data:dict=None, headers:dict=None):
         """Creating request objects."""
         full_path = self.base_path + path
         return Request(method, path, data, headers)
 
-    def handle_request(self, path, method, data=None, headers=None):
+    def handle_request(self, path:str, method:HTTPVerb, data:dict=None, headers:dict=None):
         """Executing a previously built request object."""
-        req = self.build_request(path, HTTPVerb.delete, headers=headers);
+        req = self.build_request(path, method, headers=headers);
         if self.auth:
             self.auth.decorate_request(req)
         return self.execute_request(req)
     
-    def execute_request(self, request):
+    def execute_request(self, request:Request):
         resp = request.invoke_request()
         return resp if not self.error_handler else self.error_handler.handle_error(resp, request, self)
