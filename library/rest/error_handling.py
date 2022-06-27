@@ -5,3 +5,4 @@ class ErrorHandler():
         """Detects an error in the response. If would not raise an exception should return a response object"""
         if response.status_code >= 400:
             raise Exception('Request "{} {}" failed!'.format(request.method, request.path))
+        return response
