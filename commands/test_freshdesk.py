@@ -7,7 +7,7 @@ def mocked_requests_multiple_success(*args, **kwargs):
     """Mock requests to service."""
 
     # Fetching GitHub user details
-    if 'GET' == args[0] and '/users/github_username' == args[1]:
+    if 'GET' == args[0] and 'https://api.github.com/users/github_username' == args[1]:
         mock_response = mock.Mock(status_code=200)
         mock_response.content = json.dumps({
             "id": 1,
@@ -20,21 +20,21 @@ def mocked_requests_multiple_success(*args, **kwargs):
         mock_response.headers['Content-Type'] = 'application/json'
         return mock_response
     # Updating Freshdesk contact details
-    elif 'PUT' == args[0] and '/api/v2/contacts/1' == args[1]:
+    elif 'PUT' == args[0] and 'https://tests.freshdesk.com/api/v2/contacts/1' == args[1]:
         mock_response = mock.Mock(status_code=200)
         mock_response.content = json.dumps({ "id": 1 }).encode('ascii')
         mock_response.headers = requests.structures.CaseInsensitiveDict()
         mock_response.headers['Content-Type'] = 'application/json'
         return mock_response
     # Creating a Freshdesk contact
-    elif 'POST' == args[0] and '/api/v2/contacts' == args[1]:
+    elif 'POST' == args[0] and 'https://tests.freshdesk.com/api/v2/contacts' == args[1]:
         mock_response = mock.Mock(status_code=200)
         mock_response.content = json.dumps({ "id": 1 }).encode('ascii')
         mock_response.headers = requests.structures.CaseInsensitiveDict()
         mock_response.headers['Content-Type'] = 'application/json'
         return mock_response
     # Searching for a Freshdesk contact
-    elif 'GET' == args[0] and '/api/v2/search/contacts?query="unique_external_id:github_username"' == args[1]:
+    elif 'GET' == args[0] and 'https://tests.freshdesk.com/api/v2/search/contacts?query="unique_external_id:github_username"' == args[1]:
         mock_response = mock.Mock(status_code=200)
         mock_response.content = json.dumps({ "results": [] }).encode('ascii')
         mock_response.headers = requests.structures.CaseInsensitiveDict()
