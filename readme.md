@@ -20,7 +20,7 @@ A couple of environment variables are required:
 - Freshdesk service is available
 - Freshdesk subdomain is available
 
-## Bootstrapping app
+## Setup
 Dependencies need to be installed - this is possible via executing `pip3 install -r requirements.txt` in a terminal with python 3 available.
 
 ## Usage
