@@ -9,14 +9,14 @@ class TestClient(TestCase):
     path = "/ping"
 
     @mock.patch("requests.request")
-    def test_get_requests(self, mock_post):
+    def test_get_requests(self, request_mock):
         """Test GET requests."""
 
         my_mock_response = mock.Mock(status_code=200)
         my_mock_response.content = json.dumps({ "pong": True }).encode('ascii')
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         client_obj = Client(self.base_path)
         response = client_obj.get(self.path)
@@ -26,14 +26,14 @@ class TestClient(TestCase):
         self.assertEqual(response.get_json(True)['pong'], True, 'Mocked response should return expected "pong" property value!')
 
     @mock.patch("requests.request")
-    def test_post_requests(self, mock_post):
+    def test_post_requests(self, request_mock):
         """Test POST requests."""
 
         my_mock_response = mock.Mock(status_code=200)
         my_mock_response.content = json.dumps({ "pong": True }).encode('ascii')
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         headers = { "Accept": "application/json" }
         payload = { "test": True }
@@ -48,14 +48,14 @@ class TestClient(TestCase):
         self.assertEqual(response.get_json(True)['pong'], True, 'Mocked response should return expected "pong" property value!')
 
     @mock.patch("requests.request")
-    def test_put_requests(self, mock_post):
+    def test_put_requests(self, request_mock):
         """Test PUT requests."""
 
         my_mock_response = mock.Mock(status_code=200)
         my_mock_response.content = json.dumps({ "pong": True }).encode('ascii')
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         headers = { "Accept": "application/json" }
         payload = { "test": True }
@@ -70,14 +70,14 @@ class TestClient(TestCase):
         self.assertEqual(response.get_json(True)['pong'], True, 'Mocked response should return expected "pong" property value!')
 
     @mock.patch("requests.request")
-    def test_patch_requests(self, mock_post):
+    def test_patch_requests(self, request_mock):
         """Test PATCH requests."""
 
         my_mock_response = mock.Mock(status_code=200)
         my_mock_response.content = json.dumps({ "pong": True }).encode('ascii')
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         headers = { "Accept": "application/json" }
         payload = { "test": True }
@@ -92,14 +92,14 @@ class TestClient(TestCase):
         self.assertEqual(response.get_json(True)['pong'], True, 'Mocked response should return expected "pong" property value!')
 
     @mock.patch("requests.request")
-    def test_delete_requests(self, mock_post):
+    def test_delete_requests(self, request_mock):
         """Test DELETE requests."""
 
         my_mock_response = mock.Mock(status_code=204)
         my_mock_response.content = json.dumps({ "pong": True }).encode('ascii')
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         client_obj = Client(self.base_path)
         response = client_obj.delete(self.path)
