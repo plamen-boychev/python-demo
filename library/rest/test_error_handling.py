@@ -23,28 +23,28 @@ class ErrorDampener(ErrorHandler):
 class TestAuth(TestCase):
 
     @mock.patch("requests.request")
-    def test_get_requests(self, mock_post):
+    def test_get_requests(self, request_mock):
         """Test error handling."""
 
         my_mock_response = mock.Mock(status_code=404)
         my_mock_response.content = b""
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         client_obj = client.Client("https://example.service.local/api/v1", error_handler=ErrorRaiser())
 
         self.assertRaises(Exception, client_obj.get, "/resource")
 
     @mock.patch("requests.request")
-    def test_get_requests(self, mock_post):
+    def test_get_requests(self, request_mock):
         """Test error handling."""
 
         my_mock_response = mock.Mock(status_code=404)
         my_mock_response.content = b""
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         client_obj = Client("https://example.service.local/api/v1", error_handler=ErrorDampener())
         res = client_obj.get("/resource")
