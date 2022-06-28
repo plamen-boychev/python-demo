@@ -12,7 +12,7 @@ class FreshdeskClient(BaseClient):
     def __init__(self, subdomain:str=None, api_key:str=None, headers:dict=None, auth:Auth=None, error_handler:ErrorHandler=None):
         """Initializing a client."""
         # TODO: Validate subdomain
-        base_path = "https://{}.freshdesk.com/api/v2/contacts".format(subdomain)
+        base_path = "https://{}.freshdesk.com".format(subdomain)
         headers = headers if headers else {}
         # TODO: Verify credentials are valid
         # Password is a required parameter, but not really used, so we're
@@ -28,7 +28,8 @@ class FreshdeskClient(BaseClient):
     def persist_contact(self, user_login:str, details:dict):
         """Enables fetching a user details by its username / login."""
         # TODO: Validate input
-        existing_contacts = self.get('/api/v2/search/contacts?query="unique_external_id:{}"'.format(user_login))
+        path = '/api/v2/search/contacts?query="unique_external_id:{}"'.format(user_login)
+        existing_contacts = self.get(path).get_json(True)
         if len(existing_contacts["results"]):
             contact = existing_contacts["results"][0]
             return self.put("/api/v2/contacts/{}".format(contact.id), contact | details);
