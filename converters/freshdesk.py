@@ -13,5 +13,5 @@ class GitHubUserToFreshdeskContact():
             "name": github_user_details["name"],
             "email": github_user_details["email"],
             "unique_external_id": github_user_details["login"],
-            "description": "Imported GitHub user, repositories URL: {repos_url}".format(github_user_details["repos_url"])
+            "description": "Imported GitHub user, repositories URL: {}".format(github_user_details["repos_url"])
         }
