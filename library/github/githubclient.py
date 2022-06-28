@@ -19,7 +19,7 @@ class GitHubClient(BaseClient):
         error_handler = error_handler if error_handler else GitHubErrorHandler()
         super().__init__(base_path, headers, auth, error_handler)
 
-    def fet_user_details(self, user_login:str):
+    def fetch_user_details(self, user_login:str):
         """Enables fetching a user details by its username / login."""
         # TODO: Validate input
         return self.get("/users/{}".format(user_login));

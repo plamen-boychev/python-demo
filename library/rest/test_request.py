@@ -50,7 +50,7 @@ class TestRequest(TestCase):
         self.assertEqual(new_request.path, path, "Path should be available as injected!")
 
     @mock.patch("requests.request")
-    def test_invoke_requests(self, mock_post):
+    def test_invoke_requests(self, request_mock):
         """Test invoking requests."""
 
         my_mock_response = mock.Mock(status_code=200)
@@ -90,7 +90,7 @@ class TestRequest(TestCase):
         }).encode('ascii')
         my_mock_response.headers = requests.structures.CaseInsensitiveDict()
         my_mock_response.headers['Content-Type'] = 'application/json'
-        mock_post.return_value = my_mock_response
+        request_mock.return_value = my_mock_response
 
         headers = { "Accept": "application/json" }
         payload = { "test": True }
