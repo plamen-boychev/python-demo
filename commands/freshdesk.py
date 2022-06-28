@@ -12,6 +12,7 @@ class ImportGitHubUserInFreshdesk():
 
     def __init__(self, github_username:str, freshdesk_subdomain:str, github_token:str, freshdesk_token:str):
         """Constructor."""
+
         # Validating parameters
         if not github_username:
             raise Exception('No GitHub user login was provided!')
@@ -28,11 +29,11 @@ class ImportGitHubUserInFreshdesk():
         self.freshdesk_token = freshdesk_token
 
     def execute(self):
-        print("Running import command execute!")
+        """Triggerin the import."""
 
         # Fetching user details
         github_client = GitHubClient(token=self.github_token)
-        github_user = github_client.fetch_user_details(self.github_username)
+        github_user = github_client.fetch_user_details(self.github_username).get_json(True)
 
         # Converting to contact structure
         converter = GitHubUserToFreshdeskContact()
@@ -41,3 +42,5 @@ class ImportGitHubUserInFreshdesk():
         # Persist contact details
         freshdesk_client = FreshdeskClient(subdomain=self.freshdesk_subdomain, api_key=self.freshdesk_token)
         freshdesk_client.persist_contact(self.github_username, contact)
+
+        return True
