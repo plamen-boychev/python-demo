@@ -32,7 +32,7 @@ class ImportGitHubUserInFreshdesk():
 
         # Fetching user details
         github_client = GitHubClient(token=self.github_token)
-        github_user = github_client.fet_user_details(self.github_username)
+        github_user = github_client.fetch_user_details(self.github_username)
 
         # Converting to contact structure
         converter = GitHubUserToFreshdeskContact()
