@@ -47,7 +47,7 @@ class Client:
     def build_request(self, path:str, method, data:dict=None, headers:dict=None):
         """Creating request objects."""
         full_path = self.base_path + path
-        return Request(method, path, data, headers)
+        return Request(method, full_path, data, headers)
 
     def handle_request(self, path:str, method:HTTPVerb, data:dict=None, headers:dict=None):
         """Executing a previously built request object."""

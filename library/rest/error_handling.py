@@ -7,5 +7,6 @@ class ErrorHandler():
     def handle_error(self, response:Response, request:Request, client):
         """Detects an error in the response. If would not raise an exception should return a response object"""
         if response.status_code >= 400:
-            raise Exception('Request "{} {}" failed!'.format(request.method, request.path))
+            raise Exception('Request "{} {}" failed with status code {} and payload: {}'
+                .format(request.method, request.path, response.status_code, response.payload))
         return response
