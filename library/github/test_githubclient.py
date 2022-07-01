@@ -38,7 +38,7 @@ class TestClient(TestCase):
         request_mock.return_value = my_mock_response
 
         client_obj = GitHubClient(token="tokenval")
-        response = client_obj.get("test")
+        response = client_obj.get("/test")
 
         self.assertEqual(response.status_code, 200, "Mocked response should return expected status code!")
         self.assertEqual(response.headers['content-type'], 'application/json', "Mocked response should return expected content type header!")
@@ -61,7 +61,7 @@ class TestClient(TestCase):
         We're expecting the request to fail after a number of attempts
         since we're always providing 0 as remaining calls.
         """
-        self.assertRaises(Exception, client_obj.get, "test")
+        self.assertRaises(Exception, client_obj.get, "/test")
 
     @mock.patch('requests.request', side_effect=mocked_requests_multiple)
     def test_retried_request(self, request_mock):
