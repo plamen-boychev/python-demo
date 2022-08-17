@@ -31,9 +31,9 @@ class FreshdeskClient(BaseClient):
         existing_contacts = self.get(path).get_json(True)
         if len(existing_contacts["results"]):
             contact = existing_contacts["results"][0]
-            return self.put("/api/v2/contacts/{}".format(contact.id), contact | details);
+            return self.put("/api/v2/contacts/{}".format(contact.id), contact | details)
         else:
-            return self.post("/api/v2/contacts", details);
+            return self.post("/api/v2/contacts", details)
 
 class FreshdeskRetryCondition(RetryCondition):
     """Detects retry errors for the Freshdesk REST API service, indicates retry is required."""
